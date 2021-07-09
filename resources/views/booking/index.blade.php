@@ -1,38 +1,47 @@
 @extends('layouts.app')
-@if (session('addBooking'))
+
+@section('content')
+@if (session('bookingNotification'))
     <div class="alert alert-success alert-dismissible fade show">
-        {{session('addBooking')}}
+        {{session('bookingNotification')}}
 
     </div>
 @endif
-@section('content')
-<a href=" {{route('booking.create')}}" style="border: 2px solid;margin:5px; padding:5px;"> book now !</a>
-<hr>
+<a href="{{ route('booking.create') }}" class="btn btn-outline-primary btn-lg float-right" role="button" aria-pressed="true">Book now !</a>
+<h1>List of my bookings</h1>
 <div class="row">
     <div class="col">
-        <h2>Upcoming bookings</h2>
+        <h3>Upcoming bookings</h3>
     <ul class="list-group">
-        @foreach ($comingBookings as $booking)
-        <li class="list-group-item list-group-item-action">
-            Booking will be <strong>{{ $booking->booking_date }}</strong>
-            at <strong>{{date('H:i',strtotime($booking->booking_time))}}</strong>
-            <span class="badge badge-primary badge-pill float-right">{{ $booking->seats_nbr }} persons</span>
-            <a href="{{route('booking.show',$booking->}}">Delete</a>
-            <a href="">Edit</a>
-        </li>
-        @endforeach
+        @if (count($comingBookings) <= 0)
+            <li class="list-group-item list-group-item-action">No coming bookings</li>
+        @else
+            @foreach ($comingBookings as $booking)
+            <a href="{{ route('booking.show', $booking->id) }}">
+                <li class="list-group-item list-group-item-action">
+                    Booking will be <strong>{{ $booking->booking_date->format('l, F jS Y') }}</strong>
+                    at <strong>{{date('H:i',strtotime($booking->booking_time))}}</strong>
+                    <span class="badge badge-primary badge-pill float-right">{{ $booking->seats_nbr }} persons</span>
+                </li>
+            </a>
+            @endforeach
+        @endif
     </ul>
     </div>
     <div class="col">
-        <h2>Old bookings</h2>
+        <h3>Old bookings</h3>
     <ul class="list-group">
-        @foreach ($passedBookings as $booking)
-        <li class="list-group-item list-group-item-action">
-            Booking was for the <strong>{{ $booking->booking_date }}</strong>
-            at <strong>{{date('H:i',strtotime($booking->booking_time))}}</strong>
-            <span class="badge badge-primary badge-pill float-right">{{ $booking->seats_nbr }} persons</span>
-        </li>
-        @endforeach
+        @if (count($passedBookings) <= 0)
+            <li class="list-group-item list-group-item-action">No passed bookings</li>
+        @else
+            @foreach ($passedBookings as $booking)
+            <li class="list-group-item list-group-item-action">
+                Booking was for the <strong>{{ $booking->booking_date->format('l, F jS Y') }}</strong>
+                at <strong>{{date('H:i',strtotime($booking->booking_time))}}</strong>
+                <span class="badge badge-primary badge-pill float-right">{{ $booking->seats_nbr }} persons</span>
+            </li>
+            @endforeach
+        @endif
     </ul>
     </div>
 </div>

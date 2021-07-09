@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Booking extends Model
 {
+
+    protected $dates = ['booking_date'];
+
+    protected $guarded = [];
+
     public function user()
     {
         return $this->belongsTo('App\User');
